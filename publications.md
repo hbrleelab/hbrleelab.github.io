@@ -1,29 +1,21 @@
----
-layout: page
-title: Publications
----
-
-{% assign pubs = site.data.publications.items %}
+# Publications
 
 Last updated: {{ site.data.publications.generated_at }}
 
-{% if pubs == nil or pubs.size == 0 %}
-No publications found. (Check ORCID visibility / API fetch)
-{% else %}
+{% assign pubs = site.data.publications.items %}
 
-<ul>
+{% if pubs and pubs.size > 0 %}
+{% assign current_year = nil %}
+
 {% for p in pubs %}
-  <li>
-    {% if p.year %}<strong>{{ p.year }}</strong> — {% endif %}
-    {{ p.title }}
-    {% if p.journal %}<em> ({{ p.journal }})</em>{% endif %}
-    {% if p.doi %}
-      — <a href="https://doi.org/{{ p.doi }}">DOI</a>
-    {% elsif p.url %}
-      — <a href="{{ p.url }}">Link</a>
-    {% endif %}
-  </li>
-{% endfor %}
-</ul>
+{% if p.year != current_year %}
+## {{ p.year }}
+{% assign current_year = p.year %}
+{% endif %}
 
+- {{ p.title }}{% if p.journal %} (*{{ p.journal }}*){% endif %}{% if p.doi %} — [DOI](https://doi.org/{{ p.doi }}){% endif %}
+{% endfor %}
+
+{% else %}
+No publications found.
 {% endif %}
