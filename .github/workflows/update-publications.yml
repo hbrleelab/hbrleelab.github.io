@@ -1,8 +1,9 @@
 name: ORCID Publications Sync (DEBUG)
+
 on:
+  workflow_dispatch: {}
   schedule:
     - cron: "0 3 * * *"
-  workflow_dispatch: {}
 
 permissions:
   contents: write
@@ -38,8 +39,9 @@ jobs:
 
           for g in data.get("group", []) or []:
             summaries = g.get("work-summary") or []
-            if not summaries: 
+            if not summaries:
               continue
+
             best = None
             for s in summaries:
               ext = s.get("external-ids") or {}
@@ -47,8 +49,10 @@ jobs:
                 if (eid.get("external-id-type") or "").lower() == "doi" and (eid.get("external-id-value") or "").strip():
                   best = s
                   break
-              if best: break
-            if best is None: best = summaries[0]
+              if best:
+                break
+            if best is None:
+              best = summaries[0]
 
             title = (((best.get("title") or {}).get("title") or {}).get("value") or "").strip() or "(No title)"
             pub = best.get("publication-date") or {}
@@ -68,7 +72,7 @@ jobs:
                   break
 
             key = doi or (title.lower(), year, journal)
-            if key in seen: 
+            if key in seen:
               continue
             seen.add(key)
 
@@ -109,7 +113,5 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          Add debug step for ORCID publications
           git commit -m "Update publications from ORCID"
           git push
