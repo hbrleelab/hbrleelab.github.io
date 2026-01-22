@@ -1,3 +1,15 @@
 theme: jekyll-theme-minimal
+
 title: HBRL Research Group
-description: Research Group Website for Prof. Han-Bo-Ram Lee
+
+navigation:
+  - title: Home
+    url: /
+  - title: People
+    url: /people
+  - title: Research
+    url: /research
+  - title: Publications
+    url: /publications
+  - title: Contact
+    url: /contact
