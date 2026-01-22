@@ -1,5 +1,4 @@
-name: Update publications from ORCID
-
+name: ORCID Publications Sync (DEBUG)
 on:
   schedule:
     - cron: "0 3 * * *"
