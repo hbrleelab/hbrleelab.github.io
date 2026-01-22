@@ -27,5 +27,3 @@ No publications found. (Check ORCID visibility / API fetch)
 </ul>
 
 {% endif %}
-
-Jekyll test: {{ 1 | plus: 1 }}
