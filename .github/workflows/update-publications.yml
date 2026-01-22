@@ -85,6 +85,20 @@ jobs:
           print("Wrote _data/publications.json with", len(pubs), "items")
           PY
 
+      - name: Debug (after fetch)
+        run: |
+          echo "===== DEBUG INFO ====="
+          echo "BRANCH=$(git branch --show-current)"
+          echo "SHA=$(git rev-parse HEAD)"
+          echo "PWD=$(pwd)"
+          echo "---- repo root ----"
+          ls -la
+          echo "---- _data ----"
+          ls -la _data || true
+          echo "---- git status ----"
+          git status --porcelain || true
+          echo "======================"
+
       - name: Commit & push if changed
         run: |
           git add -f _data/publications.json
@@ -96,5 +110,7 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          Add debug step for ORCID publications
           git commit -m "Update publications from ORCID"
           git push
