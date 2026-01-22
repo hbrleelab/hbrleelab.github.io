@@ -1,0 +1,98 @@
+name: Update publications from ORCID
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch ORCID works
+        run: |
+          python - <<'PY'
+          import json, os, re
+          from datetime import datetime
+          from urllib.request import Request, urlopen
+
+          ORCID_ID = "0000-0002-0097-6738"
+          UA = "hbrleelab.github.io (GitHub Actions) - publications sync"
+          url = f"https://pub.orcid.org/v3.0/{ORCID_ID}/works"
+
+          req = Request(url, headers={"Accept":"application/json","User-Agent":UA})
+          data = json.loads(urlopen(req, timeout=30).read().decode("utf-8"))
+
+          pubs = []
+          seen = set()
+
+          def norm_doi(d):
+            d = d.strip()
+            d = re.sub(r"^https?://(dx\.)?doi\.org/","",d, flags=re.I)
+            return d
+
+          for g in data.get("group", []) or []:
+            summaries = g.get("work-summary") or []
+            if not summaries: 
+              continue
+            best = None
+            for s in summaries:
+              ext = s.get("external-ids") or {}
+              for eid in ext.get("external-id", []) or []:
+                if (eid.get("external-id-type") or "").lower() == "doi" and (eid.get("external-id-value") or "").strip():
+                  best = s
+                  break
+              if best: break
+            if best is None: best = summaries[0]
+
+            title = (((best.get("title") or {}).get("title") or {}).get("value") or "").strip() or "(No title)"
+            pub = best.get("publication-date") or {}
+            y = ((pub.get("year") or {}).get("value") or None)
+            year = int(y) if y and str(y).isdigit() else None
+
+            journal = (best.get("journal-title") or {}).get("value")
+            journal = journal.strip() if isinstance(journal, str) and journal.strip() else None
+
+            doi = None
+            ext = best.get("external-ids") or {}
+            for eid in ext.get("external-id", []) or []:
+              if (eid.get("external-id-type") or "").lower() == "doi":
+                v = (eid.get("external-id-value") or "").strip()
+                if v:
+                  doi = norm_doi(v)
+                  break
+
+            key = doi or (title.lower(), year, journal)
+            if key in seen: 
+              continue
+            seen.add(key)
+
+            pubs.append({"title": title, "year": year, "journal": journal, "doi": doi})
+
+          pubs.sort(key=lambda x: (x["year"] is None, -(x["year"] or 0), x["title"].lower()))
+          payload = {"orcid": ORCID_ID, "generated_at": datetime.utcnow().isoformat(timespec="seconds")+"Z", "items": pubs}
+
+          os.makedirs("_data", exist_ok=True)
+          with open("_data/publications.json","w",encoding="utf-8") as f:
+            json.dump(payload, f, ensure_ascii=False, indent=2)
+
+          print("Wrote _data/publications.json with", len(pubs), "items")
+          PY
+
+      - name: Commit & push if changed
+        run: |
+          if git diff --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add _data/publications.json
+          git commit -m "Update publications from ORCID"
+          git push
