@@ -15,6 +15,11 @@ defaults:
       path: ""
     values:
       layout: single
-      classes: wide
-
+      author_profile: true
+      sidebar:
+        - title: "LinkedIn"
+          text: |
+            <div class="elfsight-app-036901c6-bbc3-458e-ab5d-4b4154e3d458"
+                 data-elfsight-app-lazy></div>
+                 
 minimal_mistakes_skin: "default"
