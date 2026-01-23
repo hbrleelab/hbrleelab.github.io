@@ -1,15 +1,15 @@
-theme: jekyll-theme-minimal
-
 title: HBRL Research Group
+description: Atomic Layer Deposition & Materials Chemistry
 
-navigation:
-  - title: Home
-    url: /
-  - title: People
-    url: /people
-  - title: Research
-    url: /research
-  - title: Publications
-    url: /publications
-  - title: Facility
-    url: /facility
+remote_theme: pages-themes/architect@v0.2.0
+plugins:
+  - jekyll-remote-theme
+
+header_pages:
+  - research.md
+  - leader.md
+  - team.md
+  - publications.md
+  - presentations.md
+  - facility.md
+  - resources.md
