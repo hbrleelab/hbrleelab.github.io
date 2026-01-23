@@ -8,3 +8,11 @@ remote_theme: "mmistakes/minimal-mistakes@4.26.2"
 plugins:
   - jekyll-include-cache
   - jekyll-remote-theme
+
+# 기본 레이아웃
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: single
+      classes: wide
