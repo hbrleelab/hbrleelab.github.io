@@ -21,5 +21,9 @@ defaults:
           text: |
             <div class="elfsight-app-036901c6-bbc3-458e-ab5d-4b4154e3d458"
                  data-elfsight-app-lazy></div>
+        - title: "Instagram"
+          text: |
+            <div class="elfsight-app-086a6f67-1187-4a1a-b9fb-edfd27c46c89"
+                 data-elfsight-app-lazy></div>
                  
 minimal_mistakes_skin: "default"
