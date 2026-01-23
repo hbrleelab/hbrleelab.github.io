@@ -4,8 +4,6 @@ permalink: /publications/
 layout: single
 ---
 
-# Publications
-
 Last updated: {{ site.data.publications.generated_at }}
 
 {% assign pubs = site.data.publications.items %}
