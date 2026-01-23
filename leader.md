@@ -1,6 +1,8 @@
 ---
 title: Leader
+permalink: /leader/
+layout: single
 ---
 
 # Leader
-Prof. Han-Bo-Ram (Boram) Lee
+(내용)
