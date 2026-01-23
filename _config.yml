@@ -1,16 +1,10 @@
 title: HBRL Research Group
 description: Atomic Layer Deposition & Materials Chemistry
+url: "https://hbrleelab.github.io"
+baseurl: ""
 
-remote_theme: pages-themes/modernist@v0.2.0
+remote_theme: "mmistakes/minimal-mistakes@4.26.2"
 
 plugins:
+  - jekyll-include-cache
   - jekyll-remote-theme
-
-header_pages:
-  - research.md
-  - leader.md
-  - team.md
-  - publications.md
-  - presentations.md
-  - facility.md
-  - resources.md
