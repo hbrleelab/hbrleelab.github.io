@@ -4,8 +4,6 @@ permalink: /resources/
 layout: single
 ---
 
-# Resources
-
 ## Good reading materials for publication and paper writing
 
 ---
