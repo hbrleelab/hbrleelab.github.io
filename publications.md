@@ -2,6 +2,9 @@
 title: Publications
 permalink: /publications/
 layout: single
+sidebar:
+  - title: "HBRL Research Group"
+    text: "Atomic Layer Deposition & Materials Chemistry"
 ---
 
 # Publications
