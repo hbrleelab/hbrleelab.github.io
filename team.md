@@ -1,6 +1,8 @@
 ---
 title: Team
+permalink: /team/
+layout: single
 ---
 
 # Team
-Postdoc
+(내용)
