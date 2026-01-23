@@ -16,3 +16,5 @@ defaults:
     values:
       layout: single
       classes: wide
+
+minimal_mistakes_skin: "default"
