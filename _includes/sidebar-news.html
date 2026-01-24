@@ -1,0 +1,16 @@
+<div class="sidebar__item">
+  <h3 class="sidebar__title">Latest News</h3>
+  <ul class="nav__list">
+    {% assign items = site.data.news | sort: "date" | reverse %}
+    {% for n in items limit: 3 %}
+      <li style="margin-bottom: .35rem;">
+        <a href="{{ n.url | relative_url }}" target="_blank" rel="noopener">
+          {{ n.title }}
+        </a>
+        <div style="font-size: 0.85em; opacity: .75;">
+          {{ n.date }}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
