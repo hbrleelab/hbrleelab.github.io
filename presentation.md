@@ -1,5 +1,5 @@
 ---
-title: Presentation
-permalink: /presentation/
+title: Presentations
+permalink: /presentations/
 layout: single
 ---
