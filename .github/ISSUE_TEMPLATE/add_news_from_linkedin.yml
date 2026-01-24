@@ -1,0 +1,19 @@
+name: Add News (LinkedIn URL)
+description: Add a LinkedIn post URL and show it in the sidebar as news
+title: "Add News: "
+labels: ["news"]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: LinkedIn Post URL
+      placeholder: https://www.linkedin.com/posts/...
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: Title (optional)
+      placeholder: (leave blank to auto-generate)
+    validations:
+      required: false
