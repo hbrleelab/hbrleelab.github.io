@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   add:
-    if: contains(join(github.event.issue.labels.*.name, ','), 'news')
+    if: startsWith(github.event.issue.title, 'Add News:')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
