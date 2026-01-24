@@ -16,38 +16,66 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Append to _data/news.yml
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
         run: |
           python - <<'PY'
           import os, re
           from datetime import datetime
 
-          body = os.environ["ISSUE_BODY"]
+          body = os.environ.get("ISSUE_BODY", "") or ""
+          issue_title = os.environ.get("ISSUE_TITLE", "") or ""
 
-          def get(field):
-            m = re.search(rf"{re.escape(field)}\s*\n\s*\n(.+)", body)
+          def find_after(label):
+            # Issue Forms often look like:
+            # "LinkedIn Post URL\n\n<value>"
+            m = re.search(rf"{re.escape(label)}\s*\n+\s*(.+)", body)
             return m.group(1).strip() if m else ""
 
-          url = get("LinkedIn Post URL")
-          title = get("Title (optional)")
+          # 1) Try to get from Issue Form fields
+          url = find_after("LinkedIn Post URL")
+          title = find_after("Title (optional)")
 
-          # fallback title if user didn't provide one
+          # 2) Fallback: find first LinkedIn URL anywhere in the body
+          if not url:
+            m = re.search(r"https?://(www\.)?linkedin\.com/\S+", body)
+            url = m.group(0).strip() if m else ""
+
+          # 3) Title fallback:
+          # - Use "Add News: <something>" part if present
+          # - Otherwise default
           if not title:
-            # make a short readable default
-            title = "LinkedIn update"
+            m = re.match(r"Add News:\s*(.+)", issue_title)
+            title = (m.group(1).strip() if m else "") or "LinkedIn update"
+
+          # Safety: if still no URL, stop (avoid adding empty entries)
+          if not url:
+            raise SystemExit("No LinkedIn URL found in issue body.")
 
           today = datetime.utcnow().strftime("%Y-%m-%d")
 
           os.makedirs("_data", exist_ok=True)
           path = "_data/news.yml"
 
-          entry = f'- title: "{title.replace(chr(34), r"\"")}"\n  url: "{url}"\n  date: "{today}"\n  source: "linkedin"\n'
+          # Escape quotes inside title
+          safe_title = title.replace('"', r'\"')
+
+          entry = (
+            f'- title: "{safe_title}"\n'
+            f'  url: "{url}"\n'
+            f'  date: "{today}"\n'
+            f'  source: "linkedin"\n'
+          )
 
           if os.path.exists(path):
             with open(path, "r", encoding="utf-8") as f:
               old = f.read()
+
             if url in old:
               print("URL already exists. No change.")
               raise SystemExit(0)
+
             new = old.rstrip() + "\n" + entry
           else:
             new = entry
@@ -57,8 +85,6 @@ jobs:
 
           print("Appended news:", url)
           PY
-        env:
-          ISSUE_BODY: ${{ github.event.issue.body }}
 
       - name: Commit & push
         run: |
