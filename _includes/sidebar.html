@@ -1,0 +1,23 @@
+{% comment %}
+Override Minimal Mistakes sidebar to add site-wide Latest News block.
+{% endcomment %}
+
+{% if page.sidebar == false %}
+  {# no sidebar #}
+{% else %}
+  <div class="sidebar sticky">
+    {% include sidebar-news.html %}
+
+    {%- comment -%}
+    If you still want normal nav/profile blocks, keep the default includes below.
+    {%- endcomment -%}
+
+    {% if page.author_profile or layout.author_profile or site.author_profile %}
+      {% include author-profile.html %}
+    {% endif %}
+
+    {% if page.sidebar %}
+      {% include sidebar/custom.html %}
+    {% endif %}
+  </div>
+{% endif %}
