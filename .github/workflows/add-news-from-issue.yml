@@ -37,10 +37,18 @@ jobs:
           url = find_after("LinkedIn Post URL")
           title = find_after("Title (optional)")
 
+          # Treat placeholder values as empty (GitHub Issue Forms often use "No response")
+          if title and title.strip().lower() in ("no response", "n/a", "na", "none", "-", "null"):
+            title = ""
+
           # 2) Fallback: find first LinkedIn URL anywhere in the body
           if not url:
             m = re.search(r"https?://(www\.)?linkedin\.com/\S+", body)
             url = m.group(0).strip() if m else ""
+
+          # Safety: if still no URL, stop (avoid adding empty entries)
+          if not url:
+            raise SystemExit("No LinkedIn URL found in issue body.")
 
           # 3) Title fallback:
           # - Use "Add News: <something>" part if present
@@ -48,10 +56,6 @@ jobs:
           if not title:
             m = re.match(r"Add News:\s*(.+)", issue_title)
             title = (m.group(1).strip() if m else "") or "LinkedIn update"
-
-          # Safety: if still no URL, stop (avoid adding empty entries)
-          if not url:
-            raise SystemExit("No LinkedIn URL found in issue body.")
 
           today = datetime.utcnow().strftime("%Y-%m-%d")
 
