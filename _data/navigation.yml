@@ -13,3 +13,21 @@ main:
     url: /facility/
   - title: Resources
     url: /resources/
+
+sidebar:
+  - title: Menu
+    children:
+      - title: Research
+        url: /research/
+      - title: Leader
+        url: /leader/
+      - title: Team
+        url: /team/
+      - title: Publications
+        url: /publications/
+      - title: Presentations
+        url: /presentations/
+      - title: Facility
+        url: /facility/
+      - title: Resources
+        url: /resources/
