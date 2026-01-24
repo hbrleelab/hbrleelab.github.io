@@ -15,7 +15,9 @@ defaults:
       path: ""
     values:
       layout: single
-      classes: wide
       author_profile: false
+      sidebar:
+        - title: ""
+          text: "{% include sidebar-news.html %}"
                  
 minimal_mistakes_skin: "default"
