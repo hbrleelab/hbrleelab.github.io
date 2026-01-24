@@ -1,0 +1,6 @@
+# Latest news items shown in sidebar
+# New items are appended by GitHub Actions
+- title: "Welcome to HBRL Research Group website"
+  url: "/"
+  date: "2026-01-01"
+  source: "manual"
